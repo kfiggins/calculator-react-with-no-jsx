@@ -1,0 +1,21 @@
+{
+  "name": "calculator-react-with-no-jsx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --outfile=public/dist/bundle.js --minify --sourcemap",
+    "start": "npm run build && npx serve public -l 3333"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2",
+    "serve": "^14.2.4"
+  }
+}
