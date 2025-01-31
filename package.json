@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "esbuild src/index.js --bundle --outfile=public/dist/bundle.js --minify --sourcemap",
-    "start": "npm run build && npx serve public -l 3333"
+    "watch": "esbuild src/index.js --bundle --outfile=public/dist/bundle.js --minify --sourcemap --watch=forever",
+    "start": "concurrently \"npm run watch\" \"npx live-server public --port=3333 --watch=dist\""
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.24.2",
+    "live-server": "^1.2.2",
     "serve": "^14.2.4"
   }
 }
