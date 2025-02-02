@@ -1,6 +1,6 @@
 import React from "react";
 
-const Button = ({ value }) => {
+const Button = ({ onClick, value }) => {
   if (!value) {
     return React.createElement("div", {
       style: {
@@ -23,6 +23,7 @@ const Button = ({ value }) => {
         margin: "5px",
         width: "75px",
       },
+      onClick: () => onClick(value),
     },
     value,
   );

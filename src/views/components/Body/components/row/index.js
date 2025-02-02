@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "./components";
 
-const Row = ({ buttons }) => {
+const Row = ({ buttons, onClick }) => {
   return React.createElement(
     "div",
     {
@@ -13,7 +13,7 @@ const Row = ({ buttons }) => {
       },
     },
     buttons.map((button) =>
-      React.createElement(Button, { key: button, value: button }),
+      React.createElement(Button, { key: button, onClick, value: button }),
     ),
   );
 };

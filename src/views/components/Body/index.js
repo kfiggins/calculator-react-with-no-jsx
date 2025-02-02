@@ -1,8 +1,10 @@
 import React from "react";
 import { Display, Row } from "./components";
 import { calculatorButtons } from "./configs";
+import { useController } from "./hooks";
 
 const Body = () => {
+  const { handlers, state } = useController();
   return React.createElement(
     "div",
     {
@@ -13,8 +15,10 @@ const Body = () => {
         maxWidth: "400px",
       },
     },
-    React.createElement(Display, { value: 50012 }),
-    calculatorButtons.map((row) => React.createElement(Row, { buttons: row })),
+    React.createElement(Display, { value: state.display }),
+    calculatorButtons.map((row) =>
+      React.createElement(Row, { buttons: row, onClick: handlers.click }),
+    ),
   );
 };
 
