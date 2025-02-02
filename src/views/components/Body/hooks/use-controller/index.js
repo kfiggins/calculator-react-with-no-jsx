@@ -6,21 +6,16 @@ export default () => {
   const [activeOperation, setActiveOperation] = React.useState("");
 
   const click = (value) => {
-    console.log(value);
     const parsedValue = parseClickValue(value);
-    console.log(parsedValue);
     if (parsedValue.type === "number") {
       if (!isValidNumber({ display, parsedValue })) return;
       let nextDisplay = display;
-      console.log("next", nextDisplay);
       if (activeOperation) {
         setDisplay("");
         setActiveOperation("");
         nextDisplay = "";
       }
-      console.log("next", nextDisplay);
       nextDisplay = getNextDisplay({ display: nextDisplay, parsedValue });
-      console.log("next", nextDisplay);
       setDisplay(nextDisplay);
     } else {
       if (parsedValue.value === "AC") {
