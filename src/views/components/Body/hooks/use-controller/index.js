@@ -6,26 +6,23 @@ const initialMemory = { operation: "", value: 0 };
 export default () => {
   const [memory, setMemory] = React.useState(initialMemory);
   const [display, setDisplay] = React.useState("0");
-  const [activeOperation, setActiveOperation] = React.useState("");
+  const [shouldResetDisplay, setShouldResetDisplay] = React.useState(false);
 
   const click = (rawValue) => {
     const { type, value } = serializeInput(rawValue);
 
-    // NUMBER FLOW *****
     if (type === "number") {
       if (!isValidNumber({ display, value })) return;
 
       let nextDisplay = display;
-      if (activeOperation) {
+      if (shouldResetDisplay) {
         setDisplay("");
-        setActiveOperation("");
+        setShouldResetDisplay(false);
         nextDisplay = "";
       }
 
       nextDisplay = getNextDisplay({ display: nextDisplay, value });
       setDisplay(nextDisplay);
-
-      // OPERATION FLOW *****
     } else {
       if (value === "AC") {
         setMemory(0);
@@ -43,7 +40,7 @@ export default () => {
 
           setDisplay(addCommasToNumber(final));
           setMemory(initialMemory);
-          setActiveOperation("=");
+          setShouldResetDisplay(true);
         }
       }
 
@@ -66,12 +63,15 @@ export default () => {
             value: Number(cleanOutCommas(display)),
           });
         }
-        setActiveOperation(value);
+        setShouldResetDisplay(true);
       }
     }
   };
 
-  return { handlers: { click }, state: { activeOperation, display, memory } };
+  return {
+    handlers: { click },
+    state: { activeOperation: shouldResetDisplay, display, memory },
+  };
 };
 
 const isValidNumber = ({ display, value }) => {
@@ -109,4 +109,5 @@ const operationMap = {
 // 1. Figure out how to keep display a number and format just for viewing.
 // 2. Flash the display each time a button is pushed
 // 3. add some animation to a button press
-// 4. calculator font
+// 5. Remove commas after decimal
+// 6. Cut off amount of decimal places.

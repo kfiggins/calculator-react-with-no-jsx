@@ -8,6 +8,7 @@ const Display = ({ value }) => {
         backgroundColor: "#f0f0f0",
         border: "1px solid gray",
         borderRadius: "5px",
+        fontFamily: "Menlo, Consolas, monospace",
         fontSize: "48px",
         padding: "10px",
         textAlign: "right",
