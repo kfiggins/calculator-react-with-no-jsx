@@ -25,6 +25,7 @@ export default () => {
 
       // OPERATION FLOW *****
     } else {
+      console.log(parsedValue.value);
       if (parsedValue.value === "AC") {
         setMemory(0);
         setDisplay("0");
@@ -39,11 +40,13 @@ export default () => {
             memory.value,
           );
 
-          setDisplay(final);
+          setDisplay(addCommasToNumber(final));
           setMemory(initialMemory);
           setActiveOperation("=");
         }
       }
+
+      console.log("display", display);
 
       if (["/", "x", "-", "+"].includes(parsedValue.value)) {
         setMemory({
@@ -55,7 +58,7 @@ export default () => {
     }
   };
 
-  return { handlers: { click }, state: { display } };
+  return { handlers: { click }, state: { activeOperation, display, memory } };
 };
 
 const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
@@ -105,3 +108,8 @@ const operationMap = {
   x: (a, b) => a * b,
   "/": (a, b) => a / b,
 };
+
+// TODO's
+// 1. Figure out how to keep display a number and format just for viewing.
+// 2. Flash the display each time a button is pushed
+// 3. add some animation to a button press
