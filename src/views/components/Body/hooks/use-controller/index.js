@@ -1,22 +1,29 @@
 import React from "react";
+const initialMemory = { operation: "", value: 0 };
 
 export default () => {
-  const [memory, setMemory] = React.useState(0);
+  const [memory, setMemory] = React.useState(initialMemory);
   const [display, setDisplay] = React.useState("0");
   const [activeOperation, setActiveOperation] = React.useState("");
 
   const click = (value) => {
     const parsedValue = parseClickValue(value);
+
+    // NUMBER FLOW *****
     if (parsedValue.type === "number") {
       if (!isValidNumber({ display, parsedValue })) return;
+
       let nextDisplay = display;
       if (activeOperation) {
         setDisplay("");
         setActiveOperation("");
         nextDisplay = "";
       }
+
       nextDisplay = getNextDisplay({ display: nextDisplay, parsedValue });
       setDisplay(nextDisplay);
+
+      // OPERATION FLOW *****
     } else {
       if (parsedValue.value === "AC") {
         setMemory(0);
@@ -24,8 +31,25 @@ export default () => {
         return;
       }
 
-      if (parsedValue.value === "+") {
-        setMemory(Number(cleanOutCommas(display)));
+      if (parsedValue.value === "=") {
+        const cleanDisplay = Number(cleanOutCommas(display));
+        if (cleanDisplay > 0 && memory.operation) {
+          const final = operationMap[memory.operation](
+            cleanDisplay,
+            memory.value,
+          );
+
+          setDisplay(final);
+          setMemory(initialMemory);
+          setActiveOperation("=");
+        }
+      }
+
+      if (["/", "x", "-", "+"].includes(parsedValue.value)) {
+        setMemory({
+          operation: parsedValue.value,
+          value: Number(cleanOutCommas(display)),
+        });
         setActiveOperation(parsedValue.value);
       }
     }
@@ -35,7 +59,6 @@ export default () => {
 };
 
 const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
-const operations = ["/", "x", "-", "+", "=", "AC"];
 
 const parseClickValue = (value) => {
   const parsedValue = String(value);
@@ -74,4 +97,11 @@ const addCommasToNumber = (x) => {
 
 const cleanOutCommas = (x) => {
   return x.replace(/,/g, "");
+};
+
+const operationMap = {
+  "+": (a, b) => a + b,
+  "-": (a, b) => a - b,
+  x: (a, b) => a * b,
+  "/": (a, b) => a / b,
 };
