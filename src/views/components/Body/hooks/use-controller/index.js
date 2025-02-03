@@ -46,13 +46,25 @@ export default () => {
         }
       }
 
-      console.log("display", display);
-
       if (["/", "x", "-", "+"].includes(parsedValue.value)) {
-        setMemory({
-          operation: parsedValue.value,
-          value: Number(cleanOutCommas(display)),
-        });
+        const cleanDisplay = Number(cleanOutCommas(display));
+        if (cleanDisplay > 0 && memory.operation) {
+          const final = operationMap[memory.operation](
+            cleanDisplay,
+            memory.value,
+          );
+
+          setDisplay(addCommasToNumber(final));
+          setMemory({
+            operation: parsedValue.value,
+            value: final,
+          });
+        } else {
+          setMemory({
+            operation: parsedValue.value,
+            value: Number(cleanOutCommas(display)),
+          });
+        }
         setActiveOperation(parsedValue.value);
       }
     }
