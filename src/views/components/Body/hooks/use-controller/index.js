@@ -1,4 +1,6 @@
 import React from "react";
+import { serializeInput } from "./seralizers";
+
 const initialMemory = { operation: "", value: 0 };
 
 export default () => {
@@ -6,12 +8,12 @@ export default () => {
   const [display, setDisplay] = React.useState("0");
   const [activeOperation, setActiveOperation] = React.useState("");
 
-  const click = (value) => {
-    const parsedValue = parseClickValue(value);
+  const click = (rawValue) => {
+    const { type, value } = serializeInput(rawValue);
 
     // NUMBER FLOW *****
-    if (parsedValue.type === "number") {
-      if (!isValidNumber({ display, parsedValue })) return;
+    if (type === "number") {
+      if (!isValidNumber({ display, value })) return;
 
       let nextDisplay = display;
       if (activeOperation) {
@@ -20,24 +22,23 @@ export default () => {
         nextDisplay = "";
       }
 
-      nextDisplay = getNextDisplay({ display: nextDisplay, parsedValue });
+      nextDisplay = getNextDisplay({ display: nextDisplay, value });
       setDisplay(nextDisplay);
 
       // OPERATION FLOW *****
     } else {
-      console.log(parsedValue.value);
-      if (parsedValue.value === "AC") {
+      if (value === "AC") {
         setMemory(0);
         setDisplay("0");
         return;
       }
 
-      if (parsedValue.value === "=") {
+      if (value === "=") {
         const cleanDisplay = Number(cleanOutCommas(display));
         if (cleanDisplay > 0 && memory.operation) {
           const final = operationMap[memory.operation](
-            cleanDisplay,
             memory.value,
+            cleanDisplay,
           );
 
           setDisplay(addCommasToNumber(final));
@@ -46,26 +47,26 @@ export default () => {
         }
       }
 
-      if (["/", "x", "-", "+"].includes(parsedValue.value)) {
+      if (["/", "x", "-", "+"].includes(value)) {
         const cleanDisplay = Number(cleanOutCommas(display));
         if (cleanDisplay > 0 && memory.operation) {
           const final = operationMap[memory.operation](
-            cleanDisplay,
             memory.value,
+            cleanDisplay,
           );
 
           setDisplay(addCommasToNumber(final));
           setMemory({
-            operation: parsedValue.value,
+            operation: value,
             value: final,
           });
         } else {
           setMemory({
-            operation: parsedValue.value,
+            operation: value,
             value: Number(cleanOutCommas(display)),
           });
         }
-        setActiveOperation(parsedValue.value);
+        setActiveOperation(value);
       }
     }
   };
@@ -73,32 +74,15 @@ export default () => {
   return { handlers: { click }, state: { activeOperation, display, memory } };
 };
 
-const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
-
-const parseClickValue = (value) => {
-  const parsedValue = String(value);
-  if (numbers.includes(parsedValue)) {
-    return {
-      type: "number",
-      value: parsedValue,
-    };
-  } else {
-    return {
-      type: "operation",
-      value: parsedValue,
-    };
-  }
-};
-
-const isValidNumber = ({ display, parsedValue }) => {
-  if (parsedValue.value === ".") {
+const isValidNumber = ({ display, value }) => {
+  if (value === ".") {
     if (display.includes(".")) return false;
   }
   return true;
 };
 
-const getNextDisplay = ({ display, parsedValue }) => {
-  const combined = display + parsedValue.value;
+const getNextDisplay = ({ display, value }) => {
+  const combined = display + value;
   return addCommasToNumber(removeLeadingZero(combined));
 };
 
@@ -125,3 +109,4 @@ const operationMap = {
 // 1. Figure out how to keep display a number and format just for viewing.
 // 2. Flash the display each time a button is pushed
 // 3. add some animation to a button press
+// 4. calculator font

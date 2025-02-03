@@ -19,12 +19,12 @@ const Body = () => {
     calculatorButtons.map((row) =>
       React.createElement(Row, { buttons: row, onClick: handlers.click }),
     ),
-    React.createElement(
-      "div",
-      null,
-      "Active Operation " + state.activeOperation,
-    ),
-    React.createElement("div", null, "Memory " + JSON.stringify(state.memory)),
+    // React.createElement(
+    //   "div",
+    //   null,
+    //   "Active Operation " + state.activeOperation,
+    // ),
+    // React.createElement("div", null, "Memory " + JSON.stringify(state.memory)),
   );
 };
 
