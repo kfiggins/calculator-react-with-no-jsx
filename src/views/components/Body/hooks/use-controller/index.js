@@ -14,14 +14,14 @@ export default () => {
     if (type === "number") {
       if (!isValidNumber({ display, value })) return;
 
-      let nextDisplay = display;
+      let currentDisplay = display;
       if (shouldResetDisplay) {
         setDisplay("");
         setShouldResetDisplay(false);
-        nextDisplay = "";
+        currentDisplay = "";
       }
 
-      nextDisplay = getNextDisplay({ display: nextDisplay, value });
+      const nextDisplay = getNextDisplay({ display: currentDisplay, value });
       setDisplay(nextDisplay);
     } else {
       if (value === "AC") {
@@ -44,7 +44,7 @@ export default () => {
         }
       }
 
-      if (["/", "x", "-", "+"].includes(value)) {
+      if (Object.keys(operationMap).includes(value)) {
         const cleanDisplay = Number(cleanOutCommas(display));
         if (cleanDisplay > 0 && memory.operation) {
           const final = operationMap[memory.operation](
@@ -106,8 +106,5 @@ const operationMap = {
 };
 
 // TODO's
-// 1. Figure out how to keep display a number and format just for viewing.
-// 2. Flash the display each time a button is pushed
-// 3. add some animation to a button press
-// 5. Remove commas after decimal
-// 6. Cut off amount of decimal places.
+// 1. Remove commas after decimal
+// 2. Cut off amount of decimal places.
